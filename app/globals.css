@@ -144,8 +144,7 @@ body {
 }
 
 .top-navbar-inner {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   padding: 14px 24px;
   display: flex;
   align-items: center;
@@ -187,14 +186,12 @@ body {
 
 .protected-main {
   padding: 88px 24px 32px;
-  height: calc(100vh - 56px);
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .protected-container {
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: none;
 }
 
 .dashboard-shell {
@@ -205,7 +202,7 @@ body {
 .dashboard-wrap {
   width: 100%;
   max-width: 100%;
-  height: 100%;
+  height: auto;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.86);
   border: 1px solid rgba(217, 225, 240, 0.9);
@@ -213,7 +210,7 @@ body {
   padding: 26px;
   backdrop-filter: blur(8px);
   box-shadow: 0 22px 48px rgba(18, 37, 63, 0.14);
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .back-btn {
@@ -657,7 +654,7 @@ button.project-card {
 
   .protected-main {
     padding: 112px 14px 20px;
-    height: calc(100vh - 54px);
+    min-height: 100vh;
   }
 
   .log-controls {
