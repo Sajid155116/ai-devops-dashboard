@@ -1,6 +1,6 @@
 "use client";
 
-import AuthGuard from "../../components/AuthGuard";
+import ProtectedLayout from "../../components/ProtectedLayout";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "../../lib/api";
@@ -95,58 +95,56 @@ export default function LogPage() {
     logData?.fixSuggestion || logData?.fix_suggestion || "No fix suggestion provided.";
 
   return (
-    <AuthGuard>
-      <main className="dashboard-shell">
-        <section className="dashboard-wrap log-detail-wrap">
-          <header className="dashboard-head log-detail-head">
-            <div>
-              <h1>Log {logId}</h1>
-              <p className="auth-subtitle">Detailed execution information</p>
-            </div>
-            <div className="log-meta">
-              <span className={`log-status log-status-${status}`}>{status}</span>
-              <span className="log-time">{formatTimestamp(logData?.timestamp || logData?.createdAt)}</span>
-            </div>
-          </header>
+    <ProtectedLayout>
+      <section className="dashboard-wrap log-detail-wrap">
+        <header className="dashboard-head log-detail-head">
+          <div>
+            <h1>Log {logId}</h1>
+            <p className="auth-subtitle">Detailed execution information</p>
+          </div>
+          <div className="log-meta">
+            <span className={`log-status log-status-${status}`}>{status}</span>
+            <span className="log-time">{formatTimestamp(logData?.timestamp || logData?.createdAt)}</span>
+          </div>
+        </header>
 
-          {error ? <p className="dashboard-error">{error}</p> : null}
+        {error ? <p className="dashboard-error">{error}</p> : null}
 
-          {loading ? (
-            <div className="dashboard-loading">Loading log...</div>
-          ) : (
-            <div className="log-detail-grid">
-              <section className="detail-card">
-                <h2>AI Analysis</h2>
-                <p className="detail-line">
-                  <span>Summary:</span> {summary}
-                </p>
+        {loading ? (
+          <div className="dashboard-loading">Loading log...</div>
+        ) : (
+          <div className="log-detail-grid">
+            <section className="detail-card">
+              <h2>AI Analysis</h2>
+              <p className="detail-line">
+                <span>Summary:</span> {summary}
+              </p>
 
-                {status === "failed" ? (
-                  <>
-                    <p className="detail-line">
-                      <span>Root Cause:</span> {rootCause}
-                    </p>
-                    <p className="detail-line">
-                      <span>Fix Suggestion:</span> {fixSuggestion}
-                    </p>
-                  </>
-                ) : null}
-              </section>
+              {status === "failed" ? (
+                <>
+                  <p className="detail-line">
+                    <span>Root Cause:</span> {rootCause}
+                  </p>
+                  <p className="detail-line">
+                    <span>Fix Suggestion:</span> {fixSuggestion}
+                  </p>
+                </>
+              ) : null}
+            </section>
 
-              <section className="detail-card">
-                <h2>Raw Logs</h2>
-                <div className="raw-log-box" role="region" aria-label="Raw logs">
-                  {rawLogLines.map((line, index) => (
-                    <div key={`${index}-${line.slice(0, 16)}`} className={isErrorLine(line) ? "raw-log-line raw-log-error" : "raw-log-line"}>
-                      {line || " "}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          )}
-        </section>
-      </main>
-    </AuthGuard>
+            <section className="detail-card">
+              <h2>Raw Logs</h2>
+              <div className="raw-log-box" role="region" aria-label="Raw logs">
+                {rawLogLines.map((line, index) => (
+                  <div key={`${index}-${line.slice(0, 16)}`} className={isErrorLine(line) ? "raw-log-line raw-log-error" : "raw-log-line"}>
+                    {line || " "}
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+      </section>
+    </ProtectedLayout>
   );
 }

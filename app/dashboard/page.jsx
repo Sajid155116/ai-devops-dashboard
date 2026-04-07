@@ -1,6 +1,6 @@
 "use client";
 
-import AuthGuard from "../components/AuthGuard";
+import ProtectedLayout from "../components/ProtectedLayout";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../lib/api";
@@ -73,57 +73,55 @@ export default function DashboardPage() {
   };
 
   return (
-    <AuthGuard>
-      <main className="dashboard-shell">
-        <section className="dashboard-wrap">
-          <header className="dashboard-head">
-            <div>
-              <h1>Projects</h1>
-              <p className="auth-subtitle">Manage your DevOps projects</p>
-            </div>
+    <ProtectedLayout>
+      <section className="dashboard-wrap">
+        <header className="dashboard-head">
+          <div>
+            <h1>Projects</h1>
+            <p className="auth-subtitle">Manage your DevOps projects</p>
+          </div>
 
-            <button
-              type="button"
-              className="add-project-btn"
-              onClick={handleAddProject}
-              disabled={creating}
-            >
-              {creating ? "Refreshing..." : "Refresh Projects"}
-            </button>
-          </header>
+          <button
+            type="button"
+            className="add-project-btn"
+            onClick={handleAddProject}
+            disabled={creating}
+          >
+            {creating ? "Refreshing..." : "Refresh Projects"}
+          </button>
+        </header>
 
-          {error ? <p className="dashboard-error">{error}</p> : null}
+        {error ? <p className="dashboard-error">{error}</p> : null}
 
-          {loading ? (
-            <div className="dashboard-loading">Loading projects...</div>
-          ) : (
-            <div className="project-grid">
-              {projects.length === 0 ? (
-                <article className="project-card project-card-empty">
-                  <h3>No projects yet</h3>
-                  <p>Create your first project to get started.</p>
-                </article>
-              ) : (
-                projects.map((project) => {
-                  const projectId = project.id || project._id;
+        {loading ? (
+          <div className="dashboard-loading">Loading projects...</div>
+        ) : (
+          <div className="project-grid">
+            {projects.length === 0 ? (
+              <article className="project-card project-card-empty">
+                <h3>No projects yet</h3>
+                <p>Create your first project to get started.</p>
+              </article>
+            ) : (
+              projects.map((project) => {
+                const projectId = project.id || project._id;
 
-                  return (
-                    <button
-                      key={projectId}
-                      type="button"
-                      className="project-card"
-                      onClick={() => router.push(`/project/${projectId}`)}
-                    >
-                      <h3>{project.name || "Untitled project"}</h3>
-                      <p>Created {formatCreatedDate(project.createdAt || project.created_date)}</p>
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          )}
-        </section>
-      </main>
-    </AuthGuard>
+                return (
+                  <button
+                    key={projectId}
+                    type="button"
+                    className="project-card"
+                    onClick={() => router.push(`/project/${projectId}`)}
+                  >
+                    <h3>{project.name || "Untitled project"}</h3>
+                    <p>Created {formatCreatedDate(project.createdAt || project.created_date)}</p>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        )}
+      </section>
+    </ProtectedLayout>
   );
 }
