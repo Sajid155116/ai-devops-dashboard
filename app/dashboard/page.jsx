@@ -85,9 +85,9 @@ export default function DashboardPage() {
             type="button"
             className="add-project-btn"
             onClick={handleAddProject}
-            disabled={creating}
+            disabled={creating || loading}
           >
-            {creating ? "Refreshing..." : "Refresh Projects"}
+            {creating || loading ? "Refreshing..." : "Refresh Projects"}
           </button>
         </header>
 

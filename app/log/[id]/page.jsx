@@ -1,7 +1,7 @@
 "use client";
 
 import ProtectedLayout from "../../components/ProtectedLayout";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "../../lib/api";
 
@@ -55,10 +55,25 @@ function splitLines(rawText) {
 
 export default function LogPage() {
   const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const logId = params?.id;
   const [logData, setLogData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const handleBack = () => {
+    const projectFromQuery = searchParams.get("projectId");
+    const projectFromLog = logData?.projectId || logData?.project_id;
+    const targetProjectId = projectFromQuery || projectFromLog;
+
+    if (targetProjectId) {
+      router.push(`/project/${targetProjectId}`);
+      return;
+    }
+
+    router.push("/dashboard");
+  };
 
   useEffect(() => {
     const fetchLog = async () => {
@@ -97,6 +112,10 @@ export default function LogPage() {
   return (
     <ProtectedLayout>
       <section className="dashboard-wrap log-detail-wrap">
+        <button type="button" className="back-btn" onClick={handleBack} disabled={loading}>
+          Back to Project
+        </button>
+
         <header className="dashboard-head log-detail-head">
           <div>
             <h1>Log {logId}</h1>
@@ -114,7 +133,7 @@ export default function LogPage() {
           <div className="dashboard-loading">Loading log...</div>
         ) : (
           <div className="log-detail-grid">
-            <section className="detail-card">
+            <section className="detail-card ai-analysis-card">
               <h2>AI Analysis</h2>
               <p className="detail-line">
                 <span>Summary:</span> {summary}
@@ -132,7 +151,7 @@ export default function LogPage() {
               ) : null}
             </section>
 
-            <section className="detail-card">
+            <section className="detail-card raw-logs-card">
               <h2>Raw Logs</h2>
               <div className="raw-log-box" role="region" aria-label="Raw logs">
                 {rawLogLines.map((line, index) => (

@@ -80,6 +80,15 @@ export default function ProjectPage() {
   return (
     <ProtectedLayout>
       <section className="dashboard-wrap">
+        <button
+          type="button"
+          className="back-btn"
+          onClick={() => router.push("/dashboard")}
+          disabled={loading}
+        >
+          Back to Dashboard
+        </button>
+
         <header className="dashboard-head project-head">
           <div>
             <h1>Project {projectId}</h1>
@@ -90,7 +99,9 @@ export default function ProjectPage() {
             <label htmlFor="statusFilter">Status</label>
             <select
               id="statusFilter"
+              className="status-filter-select"
               value={statusFilter}
+              disabled={loading}
               onChange={(event) => setStatusFilter(event.target.value)}
             >
               <option value="all">All</option>
@@ -122,7 +133,7 @@ export default function ProjectPage() {
                     key={logId}
                     type="button"
                     className="log-card"
-                    onClick={() => router.push(`/log/${logId}`)}
+                    onClick={() => router.push(`/log/${logId}?projectId=${encodeURIComponent(String(projectId))}`)}
                   >
                     <div className="log-top">
                       <span className={`log-status log-status-${status}`}>{status}</span>
